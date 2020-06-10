@@ -1,3 +1,5 @@
+import os
+
 # ***The only class: node***
 # ° We decided to only use a node class and create
 #   an object called 'tree' or 'T' which is the root
@@ -71,6 +73,8 @@ def printtree(tree):
 
 # ***Returns node with minimum bigger key value than 'node'***
 def successor(tree, node):
+    if node.key == max(tree):
+        return None
     if node.right != None:
         return min(node.right)
     else:
@@ -86,7 +90,7 @@ def successor(tree, node):
                 tree = tree.left
         return tree.right
 
-# ***Return node with maximum smaller key value than 'node'***
+# ***Returns node with maximum smaller key value than 'node'***
 def predecessor(tree, node):
     # Since the minimum value has no predecessor -> return None
     if min(tree) == node.key:
@@ -107,18 +111,53 @@ def predecessor(tree, node):
     if tree.left is None:
         while(tree.parent.key > node.key):
             tree = tree.parent
-        return tree.parent.key
+        return tree.parent
     # If tree.left exists, it must be smaller than node's key value
     # and it also has to be the biggest value in this subtree.
     # Using max() to find the biggest value in subtree.
     else:
-        return max(tree.left)
+        return search(tree,max(tree.left))
+
+def printBST(tree):
+
+    def printToFile(tree):
+        nilIndex = 0
+        if tree is not None:
+            if tree.left == None:
+                with open("tree.dot", "a") as file:
+                    file.write("nil" + str(nilIndex) + "[shape=point];\n")
+                    file.write(str(tree.key) + "->nil" + str(nilIndex) + ";\n")
+                nilIndex += 1
+            else:
+                with open("tree.dot", "a") as file:
+                    file.write(str(tree.key) + "->" + str(tree.left.key) + ";\n")
+                printToFile(tree.left)
+            
+            if tree.right == None:
+                with open("tree.dot", "a") as file:
+                    file.write("nil" + str(nilIndex) + "[shape=point];\n")
+                    file.write(str(tree.key) + "->nil" + str(nilIndex) + ";\n")
+                nilIndex += 1
+            else:
+                with open("tree.dot", "a") as file:
+                    file.write(str(tree.key) + "->" + str(tree.right.key) + ";\n")
+                printToFile(tree.right)
+            
+            return
+    
+    with open("tree.dot", "w") as file:
+        file.write("digraph T {\n\n")
+
+    printToFile(tree)
+
+    with open("tree.dot", "a") as file:
+        file.write("\n}")
 
  
 def main():
     T = node(50)
     N = node(20)
-    N2 = node(70)
+    N2 = node(55)
     N3 = node(80)
     insert(T,node(30)) 
     insert(T,node(20)) 
@@ -136,13 +175,52 @@ def main():
     insert(T,node(85))
     insert(T,node(85))
     insert(T,node(60))
-    #printtree(T)
+    insert(T,node(0))
+    insert(T,node(-10))
+    """    
+    # Test for printtree()
+    print("Test for printtree:")
+    printtree(T)
+    print("----------------------------------")
+
+    # Test for search()
+    print("Test for search:")
     print(search(T,40).key)
+    print("----------------------------------")
+
+    # Test for max()
+    print("Test for max:")
     print(max(T))
+    print("----------------------------------")
+
+    # Test for min()
+    print("Test for min:")
     print(min(T))
-    print(successor(T,N).key)
-    print(predecessor(T,node(55)))
-  
+    print("----------------------------------")
+
+    # Tests for successor()
+    print("Tests for successor:")
+    print(successor(T,N).key)           # 25
+    print(successor(T,node(55)).key)    # 60
+    print(successor(T,node(80)).key)    # 85
+    print(successor(T,node(-10)).key)   # 0
+    print(successor(T,node(85)))        # None
+    print(successor(T,node(50)).key)    # 55
+    print("----------------------------------")
+    
+    # Tests for predecessor()
+    print("Tests for predecessor:")
+    print(predecessor(T,node(0)).key)   # -10
+    print(predecessor(T,node(15)).key)  # 0
+    print(predecessor(T,node(-10)))     # None
+    print(predecessor(T,node(50)).key)  # 45
+    print(predecessor(T,node(55)).key)  # 50
+    print("----------------------------------")
+    """
+
+    printBST(T)
+    
+
 if __name__ == "__main__":
     main()
 
