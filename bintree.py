@@ -17,22 +17,28 @@ class node:
 # ° at 'binary search tree'-sorted position
 # ° If there is no tree now, newnode becomes root
 #   of the tree.
+# ° Second if-clause prevents the function to insert
+#   node with a value it already has.
 def insert(tree, newnode):
     if tree is None:
         tree = newnode
     else:
-        if tree.key <= newnode.key:
-            if tree.right is None:
-                tree.right = newnode
-                tree.right.parent = tree
-            else:
-                insert(tree.right, newnode)
+        if search(tree, newnode.key) != None:
+            if search(tree, newnode.key).key == newnode.key:
+                return
         else:
-            if tree.left is None:
-                tree.left = newnode
-                tree.left.parent = tree
+            if tree.key <= newnode.key:
+                if tree.right is None:
+                    tree.right = newnode
+                    tree.right.parent = tree
+                else:
+                    insert(tree.right, newnode)
             else:
-                insert(tree.left, newnode)
+                if tree.left is None:
+                    tree.left = newnode
+                    tree.left.parent = tree
+                else:
+                    insert(tree.left, newnode)
 
 # ***Returns pointer to node with value 'key' (recursive)***
 # ° returns None if there is no tree
@@ -123,22 +129,27 @@ def printBST(tree):
     def printToFile(tree):
         nilIndex = 0
         if tree is not None:
+            """
             if tree.left == None:
                 with open("tree.dot", "a") as file:
                     file.write("nil" + str(nilIndex) + "[shape=point];\n")
                     file.write(str(tree.key) + "->nil" + str(nilIndex) + ";\n")
                 nilIndex += 1
-            else:
+            """
+            #else:
+            if tree.left != None:
                 with open("tree.dot", "a") as file:
                     file.write(str(tree.key) + "->" + str(tree.left.key) + ";\n")
                 printToFile(tree.left)
-            
+            """
             if tree.right == None:
                 with open("tree.dot", "a") as file:
                     file.write("nil" + str(nilIndex) + "[shape=point];\n")
                     file.write(str(tree.key) + "->nil" + str(nilIndex) + ";\n")
                 nilIndex += 1
-            else:
+            """
+            #else:
+            if tree.right != None:
                 with open("tree.dot", "a") as file:
                     file.write(str(tree.key) + "->" + str(tree.right.key) + ";\n")
                 printToFile(tree.right)
@@ -170,11 +181,11 @@ def main():
     insert(T,node(35))
     insert(T,node(45))
     insert(T,node(55))
+    insert(T,node(55)) #second 55
     insert(T,node(65))
     insert(T,node(75))
     insert(T,node(85))
-    insert(T,node(85))
-    insert(T,node(60))
+    insert(T,node(85)) #second 85
     insert(T,node(0))
     insert(T,node(-10))
     """    
