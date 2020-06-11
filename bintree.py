@@ -124,31 +124,26 @@ def predecessor(tree, node):
     else:
         return search(tree,max(tree.left))
 
+# ***Creates a tree.dot file***
+#   in the same dir as the code
+# ° .dot files can be read by GraphViz interpreters,
+#   which than create a graph.
+# ° The function intself contains another printToFile
+#   method which iterates over the given tree. (recursive)
 def printBST(tree):
 
     def printToFile(tree):
-        nilIndex = 0
         if tree is not None:
-            """
-            if tree.left == None:
-                with open("tree.dot", "a") as file:
-                    file.write("nil" + str(nilIndex) + "[shape=point];\n")
-                    file.write(str(tree.key) + "->nil" + str(nilIndex) + ";\n")
-                nilIndex += 1
-            """
-            #else:
+            #Left side: 
             if tree.left != None:
+                #opens and writes to file tree.dot the given string
+                #"a" is parameter for "append"
                 with open("tree.dot", "a") as file:
                     file.write(str(tree.key) + "->" + str(tree.left.key) + ";\n")
+                #recursivle goes further on the left branch
                 printToFile(tree.left)
-            """
-            if tree.right == None:
-                with open("tree.dot", "a") as file:
-                    file.write("nil" + str(nilIndex) + "[shape=point];\n")
-                    file.write(str(tree.key) + "->nil" + str(nilIndex) + ";\n")
-                nilIndex += 1
-            """
-            #else:
+            
+            #Right side:
             if tree.right != None:
                 with open("tree.dot", "a") as file:
                     file.write(str(tree.key) + "->" + str(tree.right.key) + ";\n")
@@ -156,85 +151,133 @@ def printBST(tree):
             
             return
     
+    #creates file tree.dot and writes the given String
+    #"w" is the parameter for creating and writing
     with open("tree.dot", "w") as file:
         file.write("digraph T {\n\n")
 
     printToFile(tree)
 
+    #this time "a", since there is already tree.dot
+    #and we just want to append the last curly bracket
     with open("tree.dot", "a") as file:
         file.write("\n}")
 
+
  
 def main():
-    T = node(50)
-    N = node(20)
-    N2 = node(55)
-    N3 = node(80)
-    insert(T,node(30)) 
-    insert(T,node(20)) 
-    insert(T,node(40)) 
-    insert(T,node(70)) 
-    insert(T,node(60)) 
-    insert(T,node(80))
-    insert(T,node(15))
-    insert(T,node(25))
-    insert(T,node(35))
-    insert(T,node(45))
-    insert(T,node(55))
-    insert(T,node(55)) #second 55
-    insert(T,node(65))
-    insert(T,node(75))
-    insert(T,node(85))
-    insert(T,node(85)) #second 85
-    insert(T,node(0))
-    insert(T,node(-10))
-    """    
-    # Test for printtree()
-    print("Test for printtree:")
-    printtree(T)
-    print("----------------------------------")
 
-    # Test for search()
-    print("Test for search:")
-    print(search(T,40).key)
-    print("----------------------------------")
+    testBool = input("Do you want to create the test tree and run tests? [y/n]\n")
+    if testBool == "y":
+        #creating a tree for tests
+        T = node(50)       #tree (root)
+        N = node(15)
+        insert(T,node(30)) 
+        insert(T,node(40)) 
+        insert(T,node(70)) 
+        insert(T,node(60)) 
+        insert(T,node(80))
+        insert(T,node(15))
+        insert(T,node(25))
+        insert(T,node(35))
+        insert(T,node(45))
+        insert(T,node(55))
+        insert(T,node(55)) #second 55
+        insert(T,node(65))
+        insert(T,node(75))
+        insert(T,node(85))
+        insert(T,node(85)) #second 85
+        insert(T,node(0))  #zero case
+        insert(T,node(-10))#minus case
 
-    # Test for max()
-    print("Test for max:")
-    print(max(T))
-    print("----------------------------------")
 
-    # Test for min()
-    print("Test for min:")
-    print(min(T))
-    print("----------------------------------")
+        # Test for printtree()
+        print("Test for printtree:")
+        printtree(T)
+        print("----------------------------------")
 
-    # Tests for successor()
-    print("Tests for successor:")
-    print(successor(T,N).key)           # 25
-    print(successor(T,node(55)).key)    # 60
-    print(successor(T,node(80)).key)    # 85
-    print(successor(T,node(-10)).key)   # 0
-    print(successor(T,node(85)))        # None
-    print(successor(T,node(50)).key)    # 55
-    print("----------------------------------")
+        # Test for search()
+        print("Test for search:")
+        print(search(T,40).key)
+        print("----------------------------------")
+
+        # Test for max()
+        print("Test for max:")
+        print(max(T))
+        print("----------------------------------")
+
+        # Test for min()
+        print("Test for min:")
+        print(min(T))
+        print("----------------------------------")
+
+        # Tests for successor()
+        print("Tests for successor:")
+        print(successor(T,N).key)           # 25
+        print(successor(T,node(55)).key)    # 60
+        print(successor(T,node(80)).key)    # 85
+        print(successor(T,node(-10)).key)   # 0
+        print(successor(T,node(85)))        # None
+        print(successor(T,node(50)).key)    # 55
+        print("----------------------------------")
+        
+        # Tests for predecessor()
+        print("Tests for predecessor:")
+        print(predecessor(T,node(0)).key)   # -10
+        print(predecessor(T,node(15)).key)  # 0
+        print(predecessor(T,node(-10)))     # None
+        print(predecessor(T,node(50)).key)  # 45
+        print(predecessor(T,node(55)).key)  # 50
+        print("----------------------------------")
+        
+        #Creating tree.dot file
+        printBST(T)
     
-    # Tests for predecessor()
-    print("Tests for predecessor:")
-    print(predecessor(T,node(0)).key)   # -10
-    print(predecessor(T,node(15)).key)  # 0
-    print(predecessor(T,node(-10)))     # None
-    print(predecessor(T,node(50)).key)  # 45
-    print(predecessor(T,node(55)).key)  # 50
-    print("----------------------------------")
-    """
+    # ***This just coordinates the interactive part of the main function***
+    # ° where one can test every function with a self crated tree
+    # ° not very elegant written, but it works
+    if input("Do you want to start manipulating your own tree? [y/n]") == "y":
+        inputTree = node(50)
+        insertInput = None
+        decisionBool = True
+        print("Start by inserting values.\n")
+        print("Insert values one by one and accept every single one by hitting ENTER.\n")
+        print("If you want to stop inserting, simply write [exit] without brackets and hit ENTER.\n")
+        while(insertInput != "exit"):
+            insertInput = input()
+            if insertInput != "exit":
+                inputTemp = int(insertInput)
+                insert(inputTree, node(inputTemp))
 
-    printBST(T)
+        while(decisionBool == True):
+            print("Which functionality do you want to test now?")
+            print("[search][max][min][printtree][successor][predecessor][printBSD][exit]")
+            decision = input("Write the functions name without brackets and hit ENTER:")
+            if decision == "search":
+                print("Which value you want to search for?")
+                print(search(inputTree, input()))
+            elif decision == "max":
+                print("Maximum value is:")
+                print(max(inputTree))
+            elif decision == "min":
+                print("Minimum value is:")
+                print(min(inputTree))
+            elif decision == "printtree":
+                print("This is the tree from lowest to highest value:")
+                printtree(inputTree)
+            elif decision == "successor":
+                print("For which value you want to find the successor?:")
+                print(successor(inputTree, node(int(input()))).key)
+            elif decision == "predecessor":
+                print("For which value you want to find the predecessor?:")
+                print(predecessor(inputTree, node(int(input()))).key)
+            elif decision == "printBSD":
+                print("The tree.dot file gets created.")
+                printBST(inputTree)
+                print("Success! You can find it in the same folder as this code.")
+            elif decision == "exit":
+                decisionBool = False
     
 
 if __name__ == "__main__":
     main()
-
-
-
-
